@@ -6,22 +6,23 @@ using System.Threading.Tasks;
 using CryptoSwift.Extensions;
 using System.IO;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 
 namespace CryptoSwift
 {
 	public class FingerprintManager
 	{
-		private IEnumerable<Fingerprint> _fingerprintData;
+		private Collection<Fingerprint> _fingerprintData;
 		
 		public FingerprintManager(string filePath)
 		{
 			var fingerprintText = File.ReadAllText(filePath);
-			_fingerprintData = JsonConvert.DeserializeObject<List<Fingerprint>>(fingerprintText);
+			_fingerprintData = JsonConvert.DeserializeObject<Collection<Fingerprint>>(fingerprintText);
 		}
 
 		public FingerprintManager(IEnumerable<Fingerprint> fingerprintData)
 		{
-			_fingerprintData = fingerprintData;
+			_fingerprintData = new Collection<Fingerprint>(fingerprintData.ToList());
 		}
 
 		public Fingerprint GetFromIndex(int index)
