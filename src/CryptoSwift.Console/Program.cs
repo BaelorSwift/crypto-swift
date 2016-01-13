@@ -1,14 +1,11 @@
-﻿using System;
-
-namespace CryptoSwift.Console
+﻿namespace CryptoSwift.Console
 {
 	public class Program
 	{
 		public void Main(string[] args)
 		{
-			var apiKey = Environment.GetEnvironmentVariable("baelor-test-apikey");
-			var fingerprints = FingerprintManager.GenerateFingerprint(apiKey).Result;
-			var cryptoManager = new CryptographyManager(new FingerprintManager(fingerprints));
+			var fingerprintManager = new FingerprintManager("fingerprints.json");
+			var cryptoManager = new CryptographyManager(fingerprintManager);
 			
 			System.Console.Write("Enter Text to be encrypted: ");
 			var input = System.Console.ReadLine();
@@ -17,8 +14,18 @@ namespace CryptoSwift.Console
 			var output = "";
 			foreach (var fingerprint in encryptedFingerprintData)
 				output += fingerprint.Lyric + "\n";
+			output = output.TrimEnd('\n');
 
+			var decryptedOutput = cryptoManager.Decrypt(output, "123");
+
+			System.Console.WriteLine();
+			System.Console.WriteLine("=== ENCRYPTED DATA ===");
 			System.Console.WriteLine(output);
+			System.Console.WriteLine("======================");
+			System.Console.WriteLine();
+			System.Console.WriteLine("=== DECRYPTED DATA ===");
+			System.Console.WriteLine(decryptedOutput);
+			System.Console.WriteLine("=====================");
 			System.Console.ReadLine();
 		}
 	}
