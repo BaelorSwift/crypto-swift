@@ -30,6 +30,16 @@ namespace CryptoSwift
 			return _fingerprintData.ElementAt(index);
 		}
 
+		public Fingerprint GetFromLyric(string lyric)
+		{
+			return _fingerprintData.Single(f => f.Lyric.ToLowerInvariant() == lyric.ToLowerInvariant());
+		}
+
+		public int GetIndexOfFingerprint(Fingerprint fingerprint)
+		{
+			return _fingerprintData.IndexOf(fingerprint);
+		}
+
 		public string ToJson()
 		{
 			return JsonConvert.SerializeObject(_fingerprintData);
