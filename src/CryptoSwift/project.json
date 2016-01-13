@@ -5,17 +5,24 @@
 	"tags": [ "" ],
 	"projectUrl": "",
 	"licenseUrl": "",
+	"compilationOptions": {
+		"languageVersion": "experimental"
+	},
 
 	"dependencies": {
 		"System.Collections": "4.0.0",
-		"System.Runtime.Extensions": "4.0.0"	,
-		"BaelorNet": "1.0.1"
+		"System.Runtime.Extensions": "4.0.0",
+		"BaelorNet": "1.0.2"
 	},
 	"commands": {
 		"run": ""
 	},
 	"frameworks": {
 		"dnx451": { },
-		"dnxcore50": { }
+		"dnxcore50": {
+			"dependencies": {
+				"System.Linq": "4.0.1-beta-23409"
+			}
+		}
 	}
 }

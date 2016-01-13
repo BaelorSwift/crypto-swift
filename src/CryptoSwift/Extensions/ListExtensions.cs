@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CryptoSwift.Extentions
+namespace CryptoSwift.Extensions
 {
-	public static class ListExtentions
+	public static class ListExtensions
 	{
 		public static void Shuffle<T>(this List<T> list)
 		{
