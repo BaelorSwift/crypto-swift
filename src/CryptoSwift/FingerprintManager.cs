@@ -58,7 +58,7 @@ namespace CryptoSwift
 			}
 
 			fingerprints.Shuffle();
-			return fingerprints.Distinct().Take(1024);
+			return fingerprints.DistinctBy(f => f.Lyric).Take(1024);
 		}
 
 	}
