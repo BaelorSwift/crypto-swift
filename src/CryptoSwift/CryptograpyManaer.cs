@@ -69,7 +69,7 @@ namespace CryptoSwift
 
 			for (var i = 0; i < encryptedDataBitArray.Length;)
 			{
-				var tbA = new BitArray(new bool[]
+				var blockBitArray = new BitArray(new bool[]
 				{
 					encryptedDataBitArray.Get(i++), // 0x00
 					encryptedDataBitArray.Get(i++), // 0x01
@@ -84,7 +84,7 @@ namespace CryptoSwift
 				});
 
 				fingerprints.Add(
-					_fingerprintManager.GetFromIndex(tbA.ToInt16()));
+					_fingerprintManager.GetFromIndex(blockBitArray.ToInt16()));
 			}
 
 			return fingerprints;
