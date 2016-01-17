@@ -13,8 +13,10 @@ namespace CryptoSwift.Tests
 			var apiKey = Environment.GetEnvironmentVariable("baelor-test-apikey");
 			var fingerprints = await FingerprintManager.GenerateFingerprint(apiKey);
 			var cryptoManager = new CryptographyManager(new FingerprintManager(fingerprints));
-			
-			cryptoManager.Encrypt(Encoding.ASCII.GetBytes("hannah"), "123");
+			var key = cryptoManager.GenerateNewKey();
+			var iv = cryptoManager.GenerateNewIv();
+
+			cryptoManager.Encrypt(Encoding.ASCII.GetBytes("hannah"), key iv);
 		}
 	}
 }

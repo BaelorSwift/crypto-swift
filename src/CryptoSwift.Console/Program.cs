@@ -8,17 +8,19 @@ namespace CryptoSwift.Console
 		{
 			var fingerprintManager = new FingerprintManager("fingerprints.json");
 			var cryptoManager = new CryptographyManager(fingerprintManager);
-			
+			var key = cryptoManager.GenerateNewKey();
+			var iv = cryptoManager.GenerateNewIv();
+
 			System.Console.Write("Enter Text to be encrypted: ");
 			var input = System.Console.ReadLine();
-			var encryptedFingerprintData = cryptoManager.Encrypt(Encoding.ASCII.GetBytes(input), "123");
+			var encryptedFingerprintData = cryptoManager.Encrypt(Encoding.ASCII.GetBytes(input), key, iv);
 
 			var output = "";
 			foreach (var fingerprint in encryptedFingerprintData)
 				output += fingerprint.Lyric + "\n";
 			output = output.TrimEnd('\n');
 
-			var decryptedOutput = cryptoManager.Decrypt(output, "123");
+			var decryptedOutput = cryptoManager.Decrypt(output, key, iv);
 
 			System.Console.WriteLine();
 			System.Console.WriteLine("=== ENCRYPTED DATA ===");
