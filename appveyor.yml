@@ -15,6 +15,9 @@ artifacts:
   - path: '**\*.nupkg'
 cache:
   - C:\Users\appveyor\.dnx\packages
+test_script:
+- cmd: cd test\CryptoSwift.Tests
+- cmd: dnx tests
 environment:
   DNX_BUILD_VERSION: rc1-update1-%APPVEYOR_BUILD_NUMBER%
 init:
