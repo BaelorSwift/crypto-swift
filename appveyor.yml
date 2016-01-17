@@ -19,6 +19,8 @@ test_script:
 - cmd: cd %APPVEYOR_BUILD_FOLDER%\test\CryptoSwift.Tests
 - cmd: dnx test
 environment:
+  baelor-test-apikey:
+    secure: Jz7gqM5JAaDi3IBr6QadZ0e4sCrjGFnnSBJx0N+btWE8TVQuXMcB0g6V8H7ESWUw
   DNX_BUILD_VERSION: rc1-update1-%APPVEYOR_BUILD_NUMBER%
 init:
 #- ps: npm install -g bower
