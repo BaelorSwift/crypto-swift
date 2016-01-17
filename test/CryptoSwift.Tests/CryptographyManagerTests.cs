@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace CryptoSwift.Tests
 			var fingerprints = await FingerprintManager.GenerateFingerprint(apiKey);
 			var cryptoManager = new CryptographyManager(new FingerprintManager(fingerprints));
 			
-			cryptoManager.EncryptString("hannah", "123");
+			cryptoManager.Encrypt(Encoding.ASCII.GetBytes("hannah"), "123");
 		}
 	}
 }

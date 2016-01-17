@@ -1,4 +1,6 @@
-﻿namespace CryptoSwift.Console
+﻿using System.Text;
+
+namespace CryptoSwift.Console
 {
 	public class Program
 	{
@@ -9,7 +11,7 @@
 			
 			System.Console.Write("Enter Text to be encrypted: ");
 			var input = System.Console.ReadLine();
-			var encryptedFingerprintData = cryptoManager.EncryptString(input, "123");
+			var encryptedFingerprintData = cryptoManager.Encrypt(Encoding.ASCII.GetBytes(input), "123");
 
 			var output = "";
 			foreach (var fingerprint in encryptedFingerprintData)
@@ -24,7 +26,7 @@
 			System.Console.WriteLine("======================");
 			System.Console.WriteLine();
 			System.Console.WriteLine("=== DECRYPTED DATA ===");
-			System.Console.WriteLine(decryptedOutput);
+			System.Console.WriteLine(Encoding.ASCII.GetString(decryptedOutput));
 			System.Console.WriteLine("=====================");
 			System.Console.ReadLine();
 		}
