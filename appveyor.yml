@@ -17,7 +17,7 @@ cache:
   - C:\Users\appveyor\.dnx\packages
 test_script:
 - cmd: cd %APPVEYOR_BUILD_FOLDER%\test\CryptoSwift.Tests
-- cmd: dnx tests
+- cmd: dnx test
 environment:
   DNX_BUILD_VERSION: rc1-update1-%APPVEYOR_BUILD_NUMBER%
 init:
