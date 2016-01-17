@@ -7,7 +7,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using CryptoSwift.Extensions;
 using CryptoSwift.Models;
@@ -41,11 +40,34 @@ namespace CryptoSwift
 		/// </summary>
 		/// <param name="data"></param>
 		/// <param name="key"></param>
+		/// <param name="iv"></param>
 		/// <returns></returns>
-		public IEnumerable<Fingerprint> Encrypt(byte[] data, string key)
+		public IEnumerable<Fingerprint> Encrypt(byte[] data, byte[] key, byte[] iv)
 		{
+			// Validate data parameter
+			if (data == null)
+				throw new ArgumentNullException("data");
+			if (data.Length == 0)
+				return new List<Fingerprint>();
+
+			// Validate key parameter
+			if (key == null)
+				throw new ArgumentNullException("key");
+			if (key.Length == 0)
+				throw new ArgumentException("The key parameter can not be empty.", "key");
+			if (key.Length * 8 != KeyBitSize)
+				throw new ArgumentException($"The key parameter must be {KeyBitSize} bits long.", "key");
+
+			// Validate iv parameter
+			if (iv == null)
+				throw new ArgumentNullException("iv");
+			if (iv.Length == 0)
+				throw new ArgumentException("The iv parameter can not be empty.", "iv");
+			if (iv.Length * 8 != BlockBitSize)
+				throw new ArgumentException($"The iv parameter must be {BlockBitSize} bits long.", "iv");
+
 			// Encrypt data with AES
-			var encryptedData = EncryptPayload(data, key);
+			var encryptedData = EncryptPayload(data, key, iv);
 
 			// Calculate padding length needed for the encrypted data
 			var length = encryptedData.Length;
@@ -93,15 +115,31 @@ namespace CryptoSwift
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="encryptedData"></param>
+		/// <param name="data"></param>
 		/// <param name="key"></param>
+		/// <param name="iv"></param>
 		/// <returns></returns>
-		public byte[] Decrypt(string encryptedData, string key)
+		public byte[] Decrypt(string data, byte[] key, byte[] iv)
 		{
-			// do aes decryption
+			// Validate key parameter
+			if (key == null)
+				throw new ArgumentNullException("key");
+			if (key.Length == 0)
+				throw new ArgumentException("The key parameter can not be empty.", "key");
+			if (key.Length * 8 != KeyBitSize)
+				throw new ArgumentException($"The key parameter must be {KeyBitSize} bits long.", "key");
 
+			// Validate iv parameter
+			if (iv == null)
+				throw new ArgumentNullException("iv");
+			if (iv.Length == 0)
+				throw new ArgumentException("The iv parameter can not be empty.", "iv");
+			if (iv.Length * 8 != BlockBitSize)
+				throw new ArgumentException($"The iv parameter must be {BlockBitSize} bits long.", "iv");
+
+			// Get fingerprint id's from the fingerprint strings
 			var fingerprintIds = new List<int>();
-			foreach (var lyric in encryptedData.Split('\n'))
+			foreach (var lyric in data.Split('\n'))
 			{
 				if (lyric.Trim() == string.Empty)
 					continue;
@@ -128,34 +166,48 @@ namespace CryptoSwift
 				bitArray.Set(index++, arr.Get(9));
 			}
 
-			var originalData = bitArray.ToByteArray();
+			var encryptedData = bitArray.ToByteArray();
 
-			var paddingLength = originalData[originalData.Length - 1];
-			return new List<byte>(originalData).Take(originalData.Length - paddingLength).ToArray();
+			// Remove Padding from encrypted data
+			var paddingLength = encryptedData[encryptedData.Length - 1];
+			Array.Resize(ref encryptedData, encryptedData.Length - paddingLength);
+
+			// Decrypt Data
+			var decryptedData = DecryptPayload(encryptedData, key, iv);
+			return decryptedData;
 		}
 
 		/// <summary>
 		/// Helper that generates a random key on each call.
 		/// </summary>
-		private byte[] NewKey()
+		public byte[] GenerateNewKey()
 		{
 			var key = new byte[KeyBitSize / 8];
 			_randomNumberGenerator.GetBytes(key);
 			return key;
 		}
 
-		private byte[] EncryptPayload(byte[] secretMessage, string key)
+		/// <summary>
+		/// Helper that generates a random iv on each call.
+		/// </summary>
+		public byte[] GenerateNewIv()
 		{
-			byte[] cryptKey;
-			byte[] iv;
-
-			// Generate cryptkey
-			using (var generator = new Rfc2898DeriveBytes(key, SaltBitSize / 8, Iterations))
+			using (var aes = Aes.Create())
 			{
-				var salt = generator.Salt;
-				cryptKey = generator.GetBytes(KeyBitSize / 8);
+				aes.GenerateIV();
+				return aes.IV;
 			}
-			
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="secretMessage"></param>
+		/// <param name="key"></param>
+		/// <param name="iv"></param>
+		/// <returns></returns>
+		private byte[] EncryptPayload(byte[] secretMessage, byte[] key, byte[] iv)
+		{
 			using (var aes = Aes.Create())
 			{
 				aes.BlockSize = BlockBitSize;
@@ -163,10 +215,7 @@ namespace CryptoSwift
 				aes.Mode = CipherMode.CBC;
 				aes.Padding = PaddingMode.PKCS7;
 
-				aes.GenerateIV();
-				iv = aes.IV;
-
-				using (var encrypter = aes.CreateEncryptor(cryptKey, iv))
+				using (var encrypter = aes.CreateEncryptor(key, iv))
 				using (var cipherStream = new MemoryStream())
 				{
 					using (var cryptoStream = new CryptoStream(cipherStream, encrypter, CryptoStreamMode.Write))
@@ -176,6 +225,36 @@ namespace CryptoSwift
 					}
 
 					return cipherStream.ToArray();
+				}
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="encryptedMessage"></param>
+		/// <param name="key"></param>
+		/// <param name="iv"></param>
+		/// <returns></returns>
+		private byte[] DecryptPayload(byte[] encryptedMessage, byte[] key, byte[] iv)
+		{
+			using (var aes = Aes.Create())
+			{
+				aes.BlockSize = BlockBitSize;
+				aes.KeySize = KeyBitSize;
+				aes.Mode = CipherMode.CBC;
+				aes.Padding = PaddingMode.PKCS7;
+
+				using (var decrypter = aes.CreateDecryptor(key, iv))
+				using (var plainTextStream = new MemoryStream())
+				{
+					using (var decrypterStream = new CryptoStream(plainTextStream, decrypter, CryptoStreamMode.Write))
+					using (var binaryWriter = new BinaryWriter(decrypterStream))
+					{
+						binaryWriter.Write(encryptedMessage);
+					}
+
+					return plainTextStream.ToArray();
 				}
 			}
 		}
