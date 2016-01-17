@@ -56,8 +56,8 @@ namespace CryptoSwift
 			// Create cryptographically random padding
 			var padding = new byte[paddingLength];
 			_randomNumberGenerator.GetBytes(padding);
-			Array.Copy(padding, 0, encryptedData, length - 1, padding.Length);
-			encryptedData[encryptedData.Length - 1] = (byte)paddingLength;
+			padding[paddingLength - 1] = (byte) paddingLength;
+			Array.Copy(padding, 0, encryptedData, length, padding.Length);
 
 			// Create BitArray of the encrypted data
 			var encryptedDataBitArray = new BitArray(encryptedData);
