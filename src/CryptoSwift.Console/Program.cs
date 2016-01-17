@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace CryptoSwift.Console
 {
@@ -26,10 +27,18 @@ namespace CryptoSwift.Console
 			System.Console.WriteLine("=== ENCRYPTED DATA ===");
 			System.Console.WriteLine(output);
 			System.Console.WriteLine("======================");
+
 			System.Console.WriteLine();
 			System.Console.WriteLine("=== DECRYPTED DATA ===");
 			System.Console.WriteLine(Encoding.ASCII.GetString(decryptedOutput));
 			System.Console.WriteLine("=====================");
+
+			System.Console.WriteLine();
+			System.Console.WriteLine("=== METADATA ===");
+			System.Console.WriteLine("Crypto Key: {0}", BitConverter.ToString(key, 0, key.Length).Replace("-", ""));
+			System.Console.WriteLine("Crypto Iv: {0}", BitConverter.ToString(iv, 0, iv.Length).Replace("-", ""));
+			System.Console.WriteLine("================");
+
 			System.Console.ReadLine();
 		}
 	}
