@@ -19,12 +19,12 @@ namespace CryptoSwift
 		private readonly FingerprintManager _fingerprintManager;
 
 		// Preconfigured Encryption Parameters
-		public static readonly int BlockBitSize = 128;
-		public static readonly int KeyBitSize = 256;
+		public const int BlockBitSize = 128;
+		public const int KeyBitSize = 256;
 
 		// Preconfigured Password Key Derivation Parameters
-		public static readonly int SaltBitSize = 64;
-		public static readonly int Iterations = 10000;
+		public const int SaltBitSize = 64;
+		public const int Iterations = 10000;
 
 		/// <summary>
 		/// 
