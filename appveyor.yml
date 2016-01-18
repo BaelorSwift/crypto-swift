@@ -22,6 +22,3 @@ environment:
   baelor-test-apikey:
     secure: Jz7gqM5JAaDi3IBr6QadZ0e4sCrjGFnnSBJx0N+btWE8TVQuXMcB0g6V8H7ESWUw
   DNX_BUILD_VERSION: rc1-update1-%APPVEYOR_BUILD_NUMBER%
-init:
-#- ps: npm install -g bower
-
