@@ -89,6 +89,7 @@ namespace CryptoSwift
 					fingerprints.Add(new Fingerprint
 					{
 						SongSlug = song.Slug,
+						AlbumSlug = song.Album.Slug,
 						Lyric = lyric.Content,
 						TimeCodeStart = lyric.TimeCode,
 						TimeCodeEnd = (index == song.Lyrics.Count() - 1) ? song.Length : song.Lyrics.ElementAt(index + 1).TimeCode

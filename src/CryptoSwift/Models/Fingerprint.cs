@@ -12,6 +12,12 @@ namespace CryptoSwift.Models
 		public string SongSlug { get; set; }
 
 		/// <summary>
+		/// The slug of the album the song belongs to.
+		/// </summary>
+		[JsonProperty("album_slug")]
+		public string AlbumSlug { get; set; }
+		
+		/// <summary>
 		/// The lyric of the song.
 		/// </summary>
 		[JsonProperty("lyric")]
