@@ -7,6 +7,11 @@ namespace CryptoSwift.Extensions
 {
 	public static class ListExtensions
 	{
+		/// <summary>
+		/// Shuffles the contents of a <see cref="List<T>"/>.
+		/// </summary>
+		/// <typeparam name="T">The type of list.</typeparam>
+		/// <param name="list">The list to shuffle.</param>
 		public static void Shuffle<T>(this List<T> list)
 		{
 			for (var i = 0; i < RandomHelper.GenerateRandom(1, 10, 40).First(); i++)
@@ -23,6 +28,9 @@ namespace CryptoSwift.Extensions
 			}
 		}
 
+		/// <summary>
+		/// Removes any duplicates from a list based off of a property within the object.
+		/// </summary>
 		public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this List<TSource> source, Func<TSource, TKey> keySelector)
 		{
 			HashSet<TKey> seenKeys = new HashSet<TKey>();
