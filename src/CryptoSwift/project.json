@@ -4,7 +4,8 @@
 		"run": ""
 	},
 	"compilationOptions": {
-		"languageVersion": "experimental"
+		"languageVersion": "experimental",
+		"allowUnsafe": true
 	},
 	"dependencies": {
 		"BaelorNet": "1.0.2",

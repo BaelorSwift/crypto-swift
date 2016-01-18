@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using CryptoSwift.Helpers;
 
 namespace CryptoSwift.Extensions
 {
@@ -7,14 +9,13 @@ namespace CryptoSwift.Extensions
 	{
 		public static void Shuffle<T>(this List<T> list)
 		{
-			var rng = new Random();
-			for (var i = 0; i < rng.Next(10, 40); i++)
+			for (var i = 0; i < RandomHelper.GenerateRandom(1, 10, 40).First(); i++)
 			{
 				int n = list.Count;
 				while (n > 1)
 				{
 					n--;
-					int k = rng.Next(n + 1);
+					int k = RandomHelper.GenerateRandom(1, n + 1).First();
 					T value = list[k];
 					list[k] = list[n];
 					list[n] = value;
