@@ -7,15 +7,6 @@ namespace CryptoSwift.Tests
 {
 	public class CryptographyManagerTests
 	{
-		//private readonly CryptographyManager _cryptoManagaer;
-
-		public CryptographyManagerTests()
-		{
-		//	var apiKey = Environment.GetEnvironmentVariable("baelor-test-apikey");
-		//	var fingerprints = FingerprintManager.GenerateFingerprint(apiKey).Result;
-		//	_cryptoManagaer = new CryptographyManager(new FingerprintManager(fingerprints));
-		}
-
 		[Fact]
 		public async Task TestKeyGeneration()
 		{
