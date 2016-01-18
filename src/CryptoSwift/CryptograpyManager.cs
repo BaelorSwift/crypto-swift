@@ -15,33 +15,41 @@ namespace CryptoSwift
 {
 	public class CryptographyManager
 	{
+		/// <summary>
+		/// The Random Number Generator to use for cryptographic randomness.
+		/// </summary>
 		private readonly RandomNumberGenerator _randomNumberGenerator = RandomNumberGenerator.Create();
-		private readonly FingerprintManager _fingerprintManager;
-
-		// Preconfigured Encryption Parameters
-		public const int BlockBitSize = 128;
-		public const int KeyBitSize = 256;
-
-		// Preconfigured Password Key Derivation Parameters
-		public const int SaltBitSize = 64;
-		public const int Iterations = 10000;
 
 		/// <summary>
-		/// 
+		/// The Fingerprint Manager to use for Encryption and Decryption.
 		/// </summary>
-		/// <param name="fingerprintManager"></param>
+		private readonly FingerprintManager _fingerprintManager;
+		
+		/// <summary>
+		/// The bit size of the block cipher used in AES.
+		/// </summary>
+		public const int BlockBitSize = 128;
+
+		/// <summary>
+		/// The bit size of the key to use in AES.
+		/// </summary>
+		public const int KeyBitSize = 256;
+
+		/// <summary>
+		/// Creates a new Cryptography Manager based off of a Fingerprint Manager.
+		/// </summary>
+		/// <param name="fingerprintManager">The Fingerprint Manager to create a Cryptography Manager</param>
 		public CryptographyManager(FingerprintManager fingerprintManager)
 		{
 			_fingerprintManager = fingerprintManager;
 		}
 
 		/// <summary>
-		/// 
+		/// Encrypts data into an <see cref="IEnumerable"/> of <see cref="Fingerprint"/>'s.
 		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="key"></param>
-		/// <param name="iv"></param>
-		/// <returns></returns>
+		/// <param name="data">The data you want to encrypt.</param>
+		/// <param name="key">A 256 bit random Key to encrypt the data. You can use the <see cref="GenerateNewKey"/> method to generate one.</param>
+		/// <param name="iv">A 128 bit random IV. You can use the <see cref="GenerateNewIv"/> method to generate one.</param>
 		public IEnumerable<Fingerprint> Encrypt(byte[] data, byte[] key, byte[] iv)
 		{
 			// Validate data parameter
@@ -113,12 +121,11 @@ namespace CryptoSwift
 		}
 
 		/// <summary>
-		/// 
+		/// Decrypts a set of Taylor Swift lyrics into the original byte data.
 		/// </summary>
-		/// <param name="data"></param>
-		/// <param name="key"></param>
-		/// <param name="iv"></param>
-		/// <returns></returns>
+		/// <param name="data">The string representation of the Taylor Swift lyrics to decrypt.</param>
+		/// <param name="key">The 256 bit Key used to encrypt the data.</param>
+		/// <param name="iv">The 128 bit IV used to encrypt the data.</param>
 		public byte[] Decrypt(string data, byte[] key, byte[] iv)
 		{
 			// Validate key parameter
@@ -200,12 +207,11 @@ namespace CryptoSwift
 		}
 
 		/// <summary>
-		/// 
+		/// Encrypts byte data using the AES algorithm.
 		/// </summary>
-		/// <param name="secretMessage"></param>
-		/// <param name="key"></param>
-		/// <param name="iv"></param>
-		/// <returns></returns>
+		/// <param name="secretMessage">The byte data to encrypt.</param>
+		/// <param name="key">The 256 bit key to encrypt the data with.</param>
+		/// <param name="iv">The 128 bit IV.</param>
 		private byte[] EncryptPayload(byte[] secretMessage, byte[] key, byte[] iv)
 		{
 			using (var aes = Aes.Create())
@@ -230,12 +236,11 @@ namespace CryptoSwift
 		}
 
 		/// <summary>
-		/// 
+		/// Decrypts byte data using the AES algorithm.
 		/// </summary>
-		/// <param name="encryptedMessage"></param>
-		/// <param name="key"></param>
-		/// <param name="iv"></param>
-		/// <returns></returns>
+		/// <param name="secretMessage">The byte data to decrypt.</param>
+		/// <param name="key">The 256 bit key used to encrypt the data.</param>
+		/// <param name="iv">The 128 bit IV used to encrypt the data.</param>
 		private byte[] DecryptPayload(byte[] encryptedMessage, byte[] key, byte[] iv)
 		{
 			using (var aes = Aes.Create())
