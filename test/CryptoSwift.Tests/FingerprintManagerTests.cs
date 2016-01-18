@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -10,7 +11,9 @@ namespace CryptoSwift.Tests
 		public async Task GenerateFingerprintTest()
 		{
 			var apiKey = Environment.GetEnvironmentVariable("baelor-test-apikey");
-			await FingerprintManager.GenerateFingerprint(apiKey);
+			var fingerprints = await FingerprintManager.GenerateFingerprint(apiKey);
+
+			Assert.True(fingerprints.Count() == FingerprintManager.FingerprintCount);
 		}
 	}
 }

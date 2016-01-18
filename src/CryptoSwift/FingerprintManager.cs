@@ -16,7 +16,12 @@ namespace CryptoSwift
 		/// The collection fingerprints loaded in by the constructor.
 		/// </summary>
 		private Collection<Fingerprint> _fingerprintData;
-		
+
+		/// <summary>
+		/// The number of Fingerprints to generate.
+		/// </summary>
+		public const int FingerprintCount = 1024;
+
 		/// <summary>
 		/// Creates a new Fingerprint Manager based off of a fingerprint from a local file.
 		/// </summary>
@@ -100,7 +105,7 @@ namespace CryptoSwift
 			}
 
 			fingerprints.Shuffle();
-			return fingerprints.DistinctBy(f => f.Lyric.Trim().ToLowerInvariant()).Take(1024);
+			return fingerprints.DistinctBy(f => f.Lyric.Trim().ToLowerInvariant()).Take(FingerprintCount);
 		}
 	}
 }
